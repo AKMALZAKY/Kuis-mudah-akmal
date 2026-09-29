@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#6d5dfc">
+  <title>Kuis Mudah Online</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-dot"></span>Kuis Mudah</div>
+  <div class="mini">ABCDE • online • tanpa Google</div>
+</header>
+
+<main class="container">
+  <section id="home" class="screen active">
+    <div class="hero">
+      <div>
+        <div class="pill">📚 Pembuat + Pengisi</div>
+        <h1>Buat kuis sendiri,<br><span>bagikan kodenya.</span></h1>
+        <p>Satu kelas kuis bisa dibuka dari HP, tablet, atau komputer lain selama aplikasi ini dipasang di server yang sama.</p>
+        <div class="choice-grid">
+          <button class="choice-card maker" onclick="show('makerAuth')">
+            <div class="icon">🧑‍🏫</div>
+            <strong>Pembuat</strong>
+            <small>Buat soal, pilih jawaban benar, atur nilai, dan lihat hasil.</small>
+          </button>
+          <button class="choice-card taker" onclick="show('join')">
+            <div class="icon">🧑‍🎓</div>
+            <strong>Pengisi</strong>
+            <small>Masukkan kode kelas, tulis nama, jawab soal, lalu lihat nilai.</small>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="makerAuth" class="screen">
+    <button class="back" onclick="show('home')">← Kembali</button>
+    <div class="panel auth-panel">
+      <div class="tabs">
+        <button class="tab active" id="loginTab" onclick="toggleAuth(true)">Masuk</button>
+        <button class="tab" id="registerTab" onclick="toggleAuth(false)">Buat akun</button>
+      </div>
+      <h2 id="authTitle">Masuk sebagai pembuat</h2>
+      <div id="registerExtra"></div>
+      <label>Nama pengguna
+        <input id="authUsername" autocomplete="username" placeholder="contoh: pakguru" />
+      </label>
+      <label>Password pribadi
+        <input id="authPassword" type="password" autocomplete="current-password" placeholder="minimal 4 karakter" />
+      </label>
+      <button class="primary full" id="authButton" onclick="submitAuth()">Masuk</button>
+      <p class="hint">Tidak perlu Gmail atau Google.</p>
+      <div id="authMsg" class="msg"></div>
+    </div>
+  </section>
+
+  <section id="maker" class="screen">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">PEMBUAT</div>
+        <h2 id="creatorHello">Dashboard</h2>
+      </div>
+      <button class="ghost" onclick="logout()">Keluar</button>
+    </div>
+    <div class="panel create-panel">
+      <div>
+        <h3>➕ Buat kelas kuis</h3>
+        <p>Buat satu bidang pelajaran, lalu tambahkan soal ABCDE.</p>
+      </div>
+      <div class="two-col">
+        <label>Bidang pelajaran
+          <input id="newSubject" placeholder="Geografi" />
+        </label>
+        <label>Nama/judul kuis
+          <input id="newTitle" placeholder="Kuis Geografi Dasar" />
+        </label>
+      </div>
+      <button class="primary" onclick="createQuiz()">Buat & dapatkan kode</button>
+      <div id="createMsg" class="msg"></div>
+    </div>
+    <div class="section-title">Kelas saya</div>
+    <div id="quizList" class="quiz-list"></div>
+  </section>
+
+  <section id="quizEditor" class="screen">
+    <button class="back" onclick="show('maker')">← Dashboard</button>
+    <div id="editorTop"></div>
+    <div class="editor-grid">
+      <div class="panel">
+        <div class="section-head">
+          <div><h3>Tambah / edit soal</h3><p>Pilih jawaban benar dengan tombol A–E.</p></div>
+        </div>
+        <input type="hidden" id="editingId">
+        <label>Pertanyaan
+          <textarea id="qText" rows="4" placeholder="Contoh: Ibu kota Provinsi Sumatera Barat adalah ..."></textarea>
+        </label>
+        <div class="choice-inputs" id="choiceInputs"></div>
+        <div class="two-col">
+          <label>Jawaban benar
+            <select id="qAnswer">
+              <option value="a">A</option><option value="b">B</option><option value="c">C</option>
+              <option value="d">D</option><option value="e">E</option>
+            </select>
+          </label>
+          <label>Nilai soal
+            <input id="qPoints" type="number" min="0.1" step="0.1" value="1">
+          </label>
+        </div>
+        <div class="button-row">
+          <button class="primary" onclick="saveQuestion()">Simpan soal</button>
+          <button class="ghost" onclick="clearQuestionForm()">Kosongkan</button>
+        </div>
+        <div id="questionMsg" class="msg"></div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="section-title compact">Soal yang sudah dibuat</div>
+          <div id="questionList"></div>
+        </div>
+        <div class="panel result-panel">
+          <div class="section-title compact">👥 Pengisi & nilai</div>
+          <div id="attemptList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="join" class="screen">
+    <button class="back" onclick="show('home')">← Kembali</button>
+    <div class="panel auth-panel">
+      <div class="pill">🧩 Pengisi</div>
+      <h2>Masuk ke kelas kuis</h2>
+      <label>Kode kuis
+        <input id="joinCode" class="code-input" maxlength="6" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()">
+      </label>
+      <label>Nama kamu
+        <input id="studentName" placeholder="contoh: Ahmad" />
+      </label>
+      <button class="primary full" onclick="openQuiz()">Masuk ke kuis</button>
+      <div id="joinMsg" class="msg"></div>
+    </div>
+  </section>
+
+  <section id="studentQuiz" class="screen">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" id="studentSubject"></div>
+        <h2 id="studentTitle"></h2>
+      </div>
+      <div class="progress-box"><span id="progressText">0/0</span><div class="progress"><i id="progressBar"></i></div></div>
+    </div>
+    <div id="studentQuestions"></div>
+    <div class="submit-sticky">
+      <button class="primary" onclick="submitQuiz()">Kirim jawaban & lihat nilai</button>
+      <div id="studentMsg" class="msg"></div>
+    </div>
+  </section>
+
+  <section id="result" class="screen">
+    <div class="result-hero">
+      <div class="result-ring"><span id="finalScore">0</span></div>
+      <div>
+        <div class="pill">✅ Selesai</div>
+        <h2 id="resultTitle">Hasil kuis</h2>
+        <p id="resultDetail"></p>
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="primary" onclick="show('home')">Selesai</button>
+      <button class="ghost" onclick="show('join')">Isi kuis lain</button>
+    </div>
+  </section>
+</main>
+
+<footer>Proyek Kuis Mudah • tampilan responsif untuk HP dan komputer</footer>
+<script src="/app.js"></script>
+</body>
+</html>
